@@ -150,17 +150,10 @@ int main() {
     }
     inputTestData.close();
 
-
-    int testDataCount[testDataSize];
-    double calcTestData[testData.size()][testDataSize];
+    double calcTestDataS[testData.size()][testDataSize];
+    double calcTestDataI[testData.size()][testDataSize];
     double pBarS [testData.size()];
     double pBarI [testData.size()];
-
-    // Initialize testDataCount
-    for (int i = 0; i < testDataSize; i++)
-    {
-        testDataCount[i] = 0;
-    }
 
     // Initialize pBars
     for (int i = 0; i < testData.size(); i++)
@@ -179,11 +172,13 @@ int main() {
         {
             if (testData[i][j] == 1)
             {
-                calcTestData[i][j] = probWordS[j];
+                calcTestDataS[i][j] = probWordS[j];
+                calcTestDataI[i][j] = probWordI[j];
             }
             else
             {
-                calcTestData[i][j] = 1 - probWordS[j] ;
+                calcTestDataS[i][j] = 1 - probWordS[j];
+                calcTestDataI[i][j] = 1- probWordI[j];
             }
 
 
@@ -195,108 +190,113 @@ int main() {
     {
             for (int j = 0; j < testDataSize; j++)
             {
-                pBarS[i] *= calcTestData[i][j];
-                pBarI[i] *= calcTestData[i][j];
+                pBarS[i] *= calcTestDataS[i][j];
+                pBarI[i] *= calcTestDataI[i][j];
             }
             pBarS[i] *= pOfS;
             pBarI[i] *= pOfI;
+
+        cout << "Test case " << i + 1 << endl;
+        cout << '\t' << "P(S|b) = " << pBarS[i] << endl;
+        cout << '\t' << "P(I|b) = " << pBarI[i] << endl;
     }
 
 
 
 
+    // DEBUG //
 
 
-    // DEBUG
-    cout << "\n \n";
-    cout << "sC: " << sC << endl;
-    cout << "iC: " << iC << endl;
 
 
-    cout << "\n \n";
+//    cout << "\n \n";
+//    cout << "sC: " << sC << endl;
+//    cout << "iC: " << iC << endl;
+//
+//
+//    cout << "\n \n";
+//
+//    for (int i = 0; i < pbSize; i++)
+//    {
+//        cout << "countWordS" << "[" << i  << "]: " << "[" << countWordS[i] << "]" << endl;
+//
+//    }
+//
+//    cout << "\n \n";
+//
+//    for (int i = 0; i < pbSize; i++)
+//    {
+//        cout << "countWordI" << "[" << i  << "]: " << "[" << countWordI[i] << "]" << endl;
+//    }
+//
+//    cout << "\n \n";
+//
+//    for (int i = 0; i < pbSize; i++)
+//    {
+//        cout << "probWordsS[" << i << "]: " << probWordS[i] << endl;
+//    }
+//
+//    cout << "\n \n";
+//
+//    for (int i = 0; i < pbSize; i++)
+//    {
+//        cout << "probWordsI[" << i << "]: " << probWordI[i] << endl;
+//    }
+//
+//
+//    cout << "\n \n";
+//
+//
+//    for (int i = 0; i < testData.size(); i++)
+//    {
+//        for (int j = 0; j < testData[i].size(); j++)
+//        {
+//            cout << "testData[" << i << "]" << "[" << j << "]: " << testData[i][j] << endl;
+//        }
+//    }
+//
+//    cout << "\n \n";
+//
+//
+//    // Loop through and see if wt is present
+//    // Loops through outter part of Vector
+//    for (int i = 0; i < testData.size(); i++)
+//    {
+//        // Loop through inner part of vector
+//        for (int j = 0; j < testData[i].size(); j++)
+//        {
+//
+//                cout << "calcTestDataS" << "[" << i << "]" << "[" << j << "]" << calcTestDataS[i][j] << endl;
+//        }
+//
+//    }
+//
+//    cout << "\n \n";
+//
+//    cout << "testData.size(): " << testData.size();
+//
+//
+//    cout << "\n \n";
+//
+//    for (int i = 0; i < testData.size(); i++)
+//    {
+//        cout << "pBarS[" << i << "]: " << pBarS[i] << endl;
+//    }
+//
+//    cout << "\n \n";
+//
+//    for (int i = 0; i < testData.size(); i++)
+//    {
+//        cout << "pBarI[" << i << "]: " << pBarI[i] << endl;
+//    }
 
-    for (int i = 0; i < pbSize; i++)
-    {
-        cout << "countWordS" << "[" << i  << "]: " << "[" << countWordS[i] << "]" << endl;
-
-    }
-
-    cout << "\n \n";
-
-    for (int i = 0; i < pbSize; i++)
-    {
-        cout << "countWordI" << "[" << i  << "]: " << "[" << countWordI[i] << "]" << endl;
-    }
-
-    cout << "\n \n";
-
-    for (int i = 0; i < pbSize; i++)
-    {
-        cout << "probWordsS[" << i << "]: " << probWordS[i] << endl;
-    }
-
-    cout << "\n \n";
-
-    for (int i = 0; i < pbSize; i++)
-    {
-        cout << "probWordsI[" << i << "]: " << probWordI[i] << endl;
-    }
 
 
-    cout << "\n \n";
+
+    // END DEBUG //
 
 
-    for (int i = 0; i < testData.size(); i++)
-    {
-        for (int j = 0; j < testData[i].size(); j++)
-        {
-            cout << "testData[" << i << "]" << "[" << j << "]: " << testData[i][j] << endl;
-        }
-    }
 
-    cout << "\n \n";
-
-
-    for (int i = 0; i < testDataSize; i++)
-    {
-        cout << "testDataCount[" << i << "]: " << testDataCount[i] << endl;
-    }
-
-
-    cout << "\n \n";
-
-
-    // Loop through and see if wt is present
-    // Loops through outter part of Vector
-    for (int i = 0; i < testData.size(); i++)
-    {
-        // Loop through inner part of vector
-        for (int j = 0; j < testData[i].size(); j++)
-        {
-
-                cout << "calcTestData" << "[" << i << "]" << "[" << j << "]" << calcTestData[i][j] << endl;
-        }
-
-    }
-
-    cout << "\n \n";
-
-    cout << "testData.size(): " << testData.size();
-
-
-    cout << "\n \n";
-
-    for (int i = 0; i < testData.size(); i++)
-    {
-        cout << "pBarS[" << i << "]: " << pBarS[i] << endl;
-    }
-
-    cout << "\n \n";
-
-    for (int i = 0; i < testData.size(); i++)
-    {
-        cout << "pBarI[" << i << "]: " << pBarI[i] << endl;
-    }
 
     return 0;
 
