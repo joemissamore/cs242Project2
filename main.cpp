@@ -8,8 +8,19 @@ using namespace std;
 int main() {
 
 
+    string trainingData;
+    string trainingClass;
+    string testDataFile;
+    string testClassFile;
+
+    cout << "Enter the names of the training data, training class, test data and test class files (in that order):" << endl;
+    cin >> trainingData;
+    cin >> trainingClass;
+    cin >> testDataFile;
+    cin >> testClassFile;
+
     ifstream input;
-    input.open("toy.data.txt");
+    input.open(trainingData);
 
     string inputString;
 
@@ -25,21 +36,30 @@ int main() {
         getline(input, inputString);
         stringstream iss(inputString);
 
-        while (iss >> num) {
-            pb.push_back(num);
+        if (inputString.empty())
+        {
+            // do nothing
         }
 
-        values.push_back(pb);
-        pbSize = pb.size();
-        pb.clear();
+        else
+        {
+            while (iss >> num) {
+                pb.push_back(num);
+            }
+
+            values.push_back(pb);
+            pbSize = pb.size();
+            pb.clear();
+        }
     }
     input.close();
 
 
 
     // Import toy.class.txt
+    // TRAINING CLASS
     ifstream toyClass;
-    toyClass.open("toy.class.txt");
+    toyClass.open(trainingClass);
 
     vector<int> classToy;
 
@@ -96,7 +116,7 @@ int main() {
                     countWordI[j]++;
                 }
             }
-                iC++;
+            iC++;
         }
 //        cout << "classToy: " << classToy[i] << endl;
 
@@ -126,8 +146,9 @@ int main() {
 
 
     // Start input data
+    // TEST DATA FILE
     ifstream inputTestData;
-    inputTestData.open("toytest.data.txt");
+    inputTestData.open(testDataFile);
 
     vector<vector<int>> testData;
     vector<int> pbTestData;
@@ -140,13 +161,21 @@ int main() {
         getline(inputTestData, testDataString);
         stringstream issT(testDataString);
 
-        while (issT >> testDataInt) {
-            pbTestData.push_back(testDataInt);
+        if (testDataString.empty())
+        {
+            // do nothing
+        }
+        else
+        {
+            while (issT >> testDataInt) {
+                pbTestData.push_back(testDataInt);
+            }
+
+            testDataSize = pbTestData.size();
+            testData.push_back(pbTestData);
+            pbTestData.clear();
         }
 
-        testDataSize = pbTestData.size();
-        testData.push_back(pbTestData);
-        pbTestData.clear();
     }
     inputTestData.close();
 
@@ -186,20 +215,81 @@ int main() {
 
     }
 
+
+    // Importing test class data
+    ifstream testClassData;
+    testClassData.open(testClassFile);
+
+    vector<int> testClass;
+
+    int testClassNum;
+
+    if (testClassData) {
+        while (testClassData >> testClassNum)
+        {
+            testClass.push_back(testClassNum);
+        }
+    }
+
+    testClassData.close();
+
+
+
+    int spam = 0;
+    int ham = 0;
+    int correct = 0;
+
     for (int i = 0; i < testData.size(); i++)
     {
-            for (int j = 0; j < testDataSize; j++)
-            {
-                pBarS[i] *= calcTestDataS[i][j];
-                pBarI[i] *= calcTestDataI[i][j];
-            }
-            pBarS[i] *= pOfS;
-            pBarI[i] *= pOfI;
+        for (int j = 0; j < testDataSize; j++)
+        {
+            pBarS[i] *= calcTestDataS[i][j];
+            pBarI[i] *= calcTestDataI[i][j];
+        }
+        pBarS[i] *= pOfS;
+        pBarI[i] *= pOfI;
 
         cout << "Test case " << i + 1 << endl;
         cout << '\t' << "P(S|b) = " << pBarS[i] << endl;
         cout << '\t' << "P(I|b) = " << pBarI[i] << endl;
+
+        if (pBarS[i] > pBarI[i])
+        {
+            ham++;
+        }
+        else
+        {
+            spam++;
+        }
+
+        // if HAM
+        if (((pBarS[i] > pBarI[i]) && (testClass[i] == 1))
+            || ((pBarI[i] > pBarS[i]) && (testClass[i] == 0)))
+        {
+            correct++;
+        }
+        else
+        {
+            // do nothing
+        }
+
     }
+
+    double detectionRate = (double)correct / testData.size();
+    double detectionRatePerc = detectionRate * 100;
+
+    cout << "Ham: " << ham << endl;
+    cout << "Spam: " << spam << endl;
+    cout << "Correct: " << correct << endl << endl << endl;
+
+    cout << "Training using " << values.size() << " cases" << endl;
+    cout << "Evaluating " << testData.size() << " test cases" << endl;
+    cout << "Successful detection rate of " << detectionRatePerc << "%" << endl;
+
+
+
+
+
 
 
 
